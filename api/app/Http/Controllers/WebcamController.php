@@ -20,6 +20,15 @@ class WebcamController extends Controller
 
     public function create(Request $request)
     {
+
+        $this->validate($request, [
+            'name' => 'required|alpha_num',
+            'location' => 'required|alpha',
+            'url' => 'required|url',
+            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric',
+        ]);
+
         $webcam = Webcam::create($request->all());
 
         return response()->json($webcam, 201);
@@ -27,6 +36,15 @@ class WebcamController extends Controller
 
     public function update($id, Request $request)
     {
+
+        $this->validate($request, [
+            'name' => 'required|alpha_num',
+            'location' => 'required|alpha',
+            'url' => 'required|url',
+            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric',
+        ]);
+
         $webcam = Webcam::findOrFail($id);
         $webcam->update($request->all());
 
