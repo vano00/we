@@ -15,11 +15,11 @@ class CreateWebcamsTable extends Migration
     {
         Schema::create('webcams', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('location');
+            $table->string('name', 50);
+            $table->string('location', 50);
             $table->string('url');
-            $table->float('latitude');
-            $table->float('longitude');
+            $table->double('latitude', 9, 6);
+            $table->double('longitude', 9, 6);
             $table->timestamps();
         });
     }
