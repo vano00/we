@@ -22,8 +22,8 @@ class WebcamController extends Controller
     {
 
         $this->validate($request, [
-            'name' => 'required|alpha_num',
-            'location' => 'required|alpha',
+            'name' => 'required',
+            'location' => 'required',
             'url' => 'required|url',
             'longitude' => 'required|numeric',
             'latitude' => 'required|numeric',
@@ -38,8 +38,8 @@ class WebcamController extends Controller
     {
 
         $this->validate($request, [
-            'name' => 'required|alpha_num',
-            'location' => 'required|alpha',
+            'name' => 'required',
+            'location' => 'required',
             'url' => 'required|url',
             'longitude' => 'required|numeric',
             'latitude' => 'required|numeric',
