@@ -15,6 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+
 $router->group(['prefix' => 'api'], function () use ($router) {
   $router->get('webcams',  ['uses' => 'WebcamController@showAllWebcams']);
 
@@ -25,4 +26,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
   $router->delete('webcams/{id}', ['uses' => 'WebcamController@delete']);
 
   $router->put('webcams/{id}', ['uses' => 'WebcamController@update']);
+
+  $router->post('users', ['uses' => 'UserController@create']);
+
+  $router->post('/auth/login', ['uses' => 'AuthController@loginPost']);
+
 });
