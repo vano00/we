@@ -1,66 +1,49 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import shallowCompare from 'react-addons-shallow-compare';
-import GoogleMap from 'google-map-react';
-//import Webcam from '../webcam';
+import React, { Component } from 'react';
+import WebcamList from '../webcam-list';
+import Utils from '../helpers/utils';
 
-const Webcam = ({ text }) => <div className="webcam">{text}</div>;
 
-export default class SimpleMapPage extends Component {
+export default class Map extends Component {
 
-    constructor(props) {
-      super(props);
+	constructor() {
+	super();
+	this.initMap = this.initMap.bind(this);
+	}
 
-      this.state = {webcam: []};
-    }
+	componentDidMount() {
+		window.initMap = this.initMap;
+		this.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo&callback=initMap');
+	}
 
-    static propTypes = {
-    center: PropTypes.array,
-    zoom: PropTypes.number,
-    };
+	initMap() {
+		const google = window.google;
+		const mapEl = this.refs.map;
 
-    static defaultProps = {
-    center: [46.8127598, 7.6638343],
-    zoom: 3,
-    };
+		const updateCenter = function(position) {
+			map.setCenter(position);
+		};
 
-    shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-    }
+		const map = new google.maps.Map(mapEl, {
+			zoom: 4,
+		});
 
-    componentWillMount() {
-      this.WebcamList();
-    }
+		Utils.getCurrentPosition().then(updateCenter);
+	}
 
-    WebcamList() {
-      return fetch('http://localhost:8000/api/webcams')
-          .then(result=>result.json())
-          .then(webcam=>this.setState({webcam}))
-    }
+	loadJS(src) {
+		const ref = window.document.getElementsByTagName("script")[0];
+		const script = window.document.createElement("script");
+		script.src = src;
+		script.async = true;
+		script.defer = true;
+		ref.parentNode.insertBefore(script, ref);
+	}
 
-    // constructor(props) {
-    //   super(props);
-    // }
-
-    render() {
-        const webcams = this.state.webcam.map((item, i) => (
-            <Webcam
-                key={ item.id }
-                text={item.name}
-                location={item.location}
-                url={item.url}
-                lat={item.latitude}
-                lng={item.longitude} />
-        ));
-        return (
-            <div className="map">
-            <GoogleMap
-            bootstrapURLKeys={{key:'AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo'}}
-            center={this.props.center}
-            zoom={this.props.zoom}>
-            { webcams }
-            </GoogleMap>
-            </div>
-        );
-    }
+	render() {
+		return (
+			<div id="map" ref="map">
+				<WebcamList />
+			</div>
+		);
+	}
 }

@@ -5,7 +5,9 @@ export default class WebcamList extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {webcam: []};
+        this.state = {
+            webcam: []
+        };
     }
 
     componentWillMount() {
@@ -24,7 +26,7 @@ export default class WebcamList extends Component {
             <Webcam
                 key={ item.id }
                 name={item.name}
-                location={item.location}
+                loc={item.location}
                 url={item.url}
                 lat={item.latitude}
                 lng={item.longitude} />

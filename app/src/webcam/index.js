@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 export default class Webcam extends Component {
     static propTypes = {
       name: PropTypes.string,
-      place: PropTypes.string,
+      loc: PropTypes.string,
       url: PropTypes.string,
-      latitude: PropTypes.number,
-      longitude: PropTypes.number,
+      lat: PropTypes.number,
+      lng: PropTypes.number,
     };
 
     render() {
