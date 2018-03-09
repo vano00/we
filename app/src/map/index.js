@@ -6,28 +6,83 @@ import Utils from '../helpers/utils';
 export default class Map extends Component {
 
 	constructor() {
-	super();
-	this.initMap = this.initMap.bind(this);
+		super();
+		this.GoogleMap = null;
+		this.mapRef = null;
+		this.map = null;
+		this.marker = null;
+		this.saveMapRef = this.saveMapRef.bind(this);
+		this.initMap = this.initMap.bind(this);
+		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
+		this.updatePosition = this.updatePosition.bind(this);
+		this.createMarker = this.createMarker.bind(this);
+		this.locateMe = this.locateMe.bind(this);
+		this.state = {
+			apiIsLoaded: false,
+			center: {
+				lat: 12.932674,
+				lng: 8.311444
+			},
+			zoom: 4
+		}
 	}
 
 	componentDidMount() {
-		window.initMap = this.initMap;
-		this.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo&callback=initMap');
+		window.onApiIsLoaded = this.onApiIsLoaded;
+		this.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo&callback=onApiIsLoaded');
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if(this.state.apiIsLoaded && this.map === null) {
+			this.initMap();
+		}
+	}
+
+	saveMapRef(ref) {
+		this.mapRef = ref;
+	}
+
+	locateMe(){
+		Utils.getCurrentPosition().then((position) => {
+			if (position) {
+				this.setState({
+					zoom: 10,
+					center: position
+				});
+				this.updatePosition();
+				this.createMarker();
+			} else {
+				alert("Not possible to locate you")
+			}
+		})
+	}
+
+	createMarker() {
+		this.marker = new this.GoogleMap.Marker({
+			position: this.state.center,
+			map:this.map
+		})
+	}
+
+	updatePosition() {
+		this.map = new this.GoogleMap.Map(this.mapRef, {
+			zoom: this.state.zoom,
+			center: this.state.center
+		});
+	};
+
+	onApiIsLoaded() {
+		this.GoogleMap = window.google.maps;
+		this.setState({
+			apiIsLoaded: true
+		});
 	}
 
 	initMap() {
-		const google = window.google;
-		const mapEl = this.refs.map;
-
-		const updateCenter = function(position) {
-			map.setCenter(position);
-		};
-
-		const map = new google.maps.Map(mapEl, {
-			zoom: 4,
+		this.map = new this.GoogleMap.Map(this.mapRef, {
+			zoom: this.state.zoom,
+			center: this.state.center
 		});
-
-		Utils.getCurrentPosition().then(updateCenter);
 	}
 
 	loadJS(src) {
@@ -41,8 +96,10 @@ export default class Map extends Component {
 
 	render() {
 		return (
-			<div id="map" ref="map">
+			<div className="mapContainer">
+				<div id="map" ref={this.saveMapRef} />
 				<WebcamList />
+				<button onClick={this.locateMe}>Locate me!</button>
 			</div>
 		);
 	}

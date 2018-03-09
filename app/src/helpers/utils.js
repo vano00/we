@@ -7,10 +7,9 @@ export default class Utils {
                     lng: position.coords.longitude
                 });
             }, () => {
-                resolve({
-                    lat: 46.932674,
-                    lng:  8.311444
-                });
+                resolve(
+                    position = null
+                );
             });
         })
     };

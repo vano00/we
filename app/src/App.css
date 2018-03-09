@@ -1,11 +1,12 @@
-#app {
+#app, .mapContainer {
   width: 100%;
   height: 100%;
 }
 
 #map {
-    width: 100%;
+    width: 90%;
     height: 100%;
+    float: right;
 }
 
 .webcam {
