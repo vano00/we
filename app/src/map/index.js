@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import WebcamList from '../webcam-list';
 import Utils from '../helpers/utils';
+import Marker from '../marker';
 
 
 export default class Map extends Component {
@@ -11,23 +11,26 @@ export default class Map extends Component {
 		this.mapRef = null;
 		this.map = null;
 		this.marker = null;
+		this.markers = null;
 		this.saveMapRef = this.saveMapRef.bind(this);
 		this.initMap = this.initMap.bind(this);
 		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
-		this.updatePosition = this.updatePosition.bind(this);
-		this.createMarker = this.createMarker.bind(this);
 		this.locateMe = this.locateMe.bind(this);
+		this.webcamList = this.webcamList.bind(this);
 		this.state = {
+			mapIsCreated: false,
 			apiIsLoaded: false,
 			center: {
-				lat: 12.932674,
-				lng: 8.311444
+				lat: 35.146190,
+				lng: -10.938965
 			},
-			zoom: 4
+			zoom: 3,
+			webcam: [],
 		}
 	}
 
 	componentDidMount() {
+		this.webcamList();
 		window.onApiIsLoaded = this.onApiIsLoaded;
 		this.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo&callback=onApiIsLoaded');
 	}
@@ -51,8 +54,9 @@ export default class Map extends Component {
 				});
 				this.updatePosition();
 				this.createMarker();
+				this.marker.setAnimation(this.GoogleMap.Animation.BOUNCE);
 			} else {
-				alert("Not possible to locate you")
+				alert("It's not possible to locate you")
 			}
 		})
 	}
@@ -65,11 +69,15 @@ export default class Map extends Component {
 	}
 
 	updatePosition() {
-		this.map = new this.GoogleMap.Map(this.mapRef, {
-			zoom: this.state.zoom,
-			center: this.state.center
-		});
-	};
+		this.map.setCenter(this.state.center)
+		this.map.setZoom(this.state.zoom)
+	}
+
+	webcamList() {
+		return fetch('http://localhost:8000/api/webcams')
+			.then(result=>result.json())
+			.then(webcam=>this.setState({webcam}))
+	}
 
 	onApiIsLoaded() {
 		this.GoogleMap = window.google.maps;
@@ -83,6 +91,9 @@ export default class Map extends Component {
 			zoom: this.state.zoom,
 			center: this.state.center
 		});
+		this.setState({
+			mapIsCreated: true
+		});
 	}
 
 	loadJS(src) {
@@ -94,11 +105,38 @@ export default class Map extends Component {
 		ref.parentNode.insertBefore(script, ref);
 	}
 
+	renderMarker() {
+		const infowindow = new this.GoogleMap.InfoWindow();
+		this.markers = this.state.webcam.map((item, i) => {
+			return (
+				<Marker
+					key={item.id}
+					position={
+						{
+							lat: item.latitude,
+							lng: item.longitude
+						}
+					}
+					location={item.location}
+					name={item.name}
+					url={item.url}
+					map={this.map}
+					google={this.GoogleMap}
+					infowindow={infowindow}
+				/>
+			)
+		});
+		return this.markers;
+	}
+
 	render() {
+		const {
+			mapIsCreated,
+		} = this.state;
 		return (
 			<div className="mapContainer">
 				<div id="map" ref={this.saveMapRef} />
-				<WebcamList />
+				{mapIsCreated && this.renderMarker()}
 				<button onClick={this.locateMe}>Locate me!</button>
 			</div>
 		);
