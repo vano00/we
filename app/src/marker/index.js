@@ -1,7 +1,18 @@
-import { Component } from 'react';
+import React,{ Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import Modal from '../modal';
 
 export default class Marker extends Component {
+
+	constructor() {
+		super();
+		this.saveModalRef = this.saveModalRef.bind(this);
+		this.toggleModal = this.toggleModal.bind(this);
+		this.state = {
+			modalIsOpen: false,
+		}
+	}
 
 	componentDidMount() {
 		this.renderMarker();
@@ -12,8 +23,31 @@ export default class Marker extends Component {
 		map: PropTypes.object,
 		google: PropTypes.object,
 		label: PropTypes.string,
-        infowindow: PropTypes.object
+		infowindow: PropTypes.object,
+		action: PropTypes.func
 	};
+
+	saveModalRef(ref) {
+		this.modalRef = ref;
+	}
+
+	toggleModal() {
+		this.setState({
+			modalIsOpen: !this.state.modalIsOpen
+		});
+	}
+
+	renderModal() {
+		const height = (document.body.clientHeight*0.8)+'px';
+		const width = (document.body.clientWidth*0.9)+'px';
+		const modalContent = <iframe frameBorder="0" title={this.props.name} width={width} height={height} src={this.props.url}></iframe>
+		const modal = 	<Modal show={this.state.modalIsOpen} ref={this.saveModalRef}
+							onClose={this.toggleModal}>
+							{modalContent}
+						</Modal>;
+
+		return (this.state.modalIsOpen ? modal : null )
+	}
 
 	renderMarker() {
 		const {
@@ -23,7 +57,7 @@ export default class Marker extends Component {
 			position,
 			location,
 			name,
-			url
+			url,
 		} = this.props;
 
 		const icon = {
@@ -31,7 +65,8 @@ export default class Marker extends Component {
 			scaledSize: new google.Size(40, 40),
 		};
 
-		const text = '<strong>' + location + '</strong> (' + name + ')<br /><a href="' + url + '">' + url + '</a>';
+		const text = (<div><strong>{location}</strong> {name}<br /><button className="infowindowbutton" type="button" onClick={this.toggleModal}>{url}</button></div>);
+		const infowindowcontainer = '<div id="infoWindow"></div>';
 
 		const marker = new google.Marker({
 			animation: google.Animation.DROP,
@@ -41,12 +76,13 @@ export default class Marker extends Component {
 		})
 
 		marker.addListener('click', function() {
-			infowindow.setContent(text);
+			infowindow.setContent(infowindowcontainer);
 			infowindow.open(map, marker);
+			ReactDOM.render(text, document.getElementById('infoWindow'));
 		});
 	}
 
 	render() {
-		return null;
+		return this.renderModal();
 	}
 }

@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 import Utils from '../helpers/utils';
 import Marker from '../marker';
 
-
 export default class Map extends Component {
 
 	constructor() {
 		super();
 		this.GoogleMap = null;
-		this.mapRef = null;
 		this.map = null;
-		this.marker = null;
-		this.markers = null;
 		this.saveMapRef = this.saveMapRef.bind(this);
 		this.initMap = this.initMap.bind(this);
 		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
@@ -107,6 +103,7 @@ export default class Map extends Component {
 
 	renderMarker() {
 		const infowindow = new this.GoogleMap.InfoWindow();
+
 		this.markers = this.state.webcam.map((item, i) => {
 			return (
 				<Marker
@@ -133,11 +130,11 @@ export default class Map extends Component {
 		const {
 			mapIsCreated,
 		} = this.state;
+
 		return (
 			<div className="mapContainer">
 				<div id="map" ref={this.saveMapRef} />
 				{mapIsCreated && this.renderMarker()}
-				<button onClick={this.locateMe}>Locate me!</button>
 			</div>
 		);
 	}

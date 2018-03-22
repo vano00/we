@@ -1,18 +1,68 @@
-#app, .mapContainer {
-  width: 100%;
-  height: 100%;
+header {
+	background-color: #00796B;
+	padding: 10px;
+
 }
 
-#map {
-    width: 90%;
-    height: 100%;
-    float: right;
+main, #app, #map, .content {
+	width: 100%;
+	height: 100%;
+}
+
+.mapContainer {
+	width: 100%;
+	height: 100%;
 }
 
 .webcam {
-    padding: 5px;
-    background-color: blue;
-    color: white;
-    font-weight: bold;
-    width: 100%
+	padding: 5px;
+	background-color: blue;
+	color: white;
+	font-weight: bold;
+	width: 100%;
+}
+
+/**** Modal ****/
+
+.backdrop {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.8);
+	padding: 50px;
+}
+
+.modal {
+	background-color: #fff;
+	border-radius: 5px;
+	margin: 0 auto;
+	padding: 30px;
+	text-align: center;
+}
+
+/**** Buttons ****/
+
+button {
+	padding: 0 16px;
+	font-size: 14px;
+	background-color: #80CBC4;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	letter-spacing: 0.5;
+	border-radius: 2px;
+	height: 36px;
+	line-height: 36px;
+	text-transform: uppercase;
+	text-align: center;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
+}
+
+.infowindowbutton {
+	background-color: transparent;
+	color: #000;
+	text-transform: none;
+	padding: 0;
 }
