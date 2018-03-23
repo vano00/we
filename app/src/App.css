@@ -1,15 +1,28 @@
+html, body {
+	height: 100%;
+	margin: 0;
+}
+
 header {
 	background-color: #00796B;
 	padding: 10px;
 
 }
 
-main, #app, #map, .content {
-	width: 100%;
+.content {
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
-.mapContainer {
+main, .mapContainer {
+	display: flex;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: auto;
+}
+
+#app, #map {
 	width: 100%;
 	height: 100%;
 }
