@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom'
 import Utils from '../helpers/utils';
-import Marker from '../marker';
+import MarkerContent from '../marker-content';
 
 export default class Map extends Component {
 
@@ -8,6 +9,7 @@ export default class Map extends Component {
 		super();
 		this.GoogleMap = null;
 		this.map = null;
+		this.infowindow = null;
 		this.saveMapRef = this.saveMapRef.bind(this);
 		this.initMap = this.initMap.bind(this);
 		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
@@ -92,6 +94,10 @@ export default class Map extends Component {
 		});
 	}
 
+	createInfowindow() {
+		this.infowindow = new this.GoogleMap.InfoWindow();
+	}
+
 	loadJS(src) {
 		const ref = window.document.getElementsByTagName("script")[0];
 		const script = window.document.createElement("script");
@@ -101,29 +107,44 @@ export default class Map extends Component {
 		ref.parentNode.insertBefore(script, ref);
 	}
 
-	renderMarker() {
-		const infowindow = new this.GoogleMap.InfoWindow();
+	marker(position, location, name, url) {
+		const icon = {
+			url: 'https://image.flaticon.com/icons/svg/149/149060.svg',
+			scaledSize: new this.GoogleMap.Size(40, 40),
+		};
 
-		this.markers = this.state.webcam.map((item, i) => {
+		const markerContent = <MarkerContent
+								location={location}
+								name={name}
+								url={url} />
+
+		const markerContainer = "<div id=markerContainer></div>";
+
+		const marker = new this.GoogleMap.Marker({
+			animation: this.GoogleMap.Animation.DROP,
+			position: position,
+			map: this.map,
+			icon: icon,
+		})
+
+		this.createInfowindow();
+
+		marker.addListener('click', function() {
+			this.infowindow.open(this.map, marker);
+			this.infowindow.setContent(markerContainer);
+			ReactDOM.render(markerContent, document.getElementById('markerContainer'))
+		});
+	}
+
+	renderMarkers() {
+
+		return this.state.webcam.map((item, i) => {
+			const position = {lat: item.latitude, lng: item.longitude}
+
 			return (
-				<Marker
-					key={item.id}
-					position={
-						{
-							lat: item.latitude,
-							lng: item.longitude
-						}
-					}
-					location={item.location}
-					name={item.name}
-					url={item.url}
-					map={this.map}
-					google={this.GoogleMap}
-					infowindow={infowindow}
-				/>
+				this.marker(position, item.location, item.name, item.url)
 			)
 		});
-		return this.markers;
 	}
 
 	render() {
@@ -134,7 +155,7 @@ export default class Map extends Component {
 		return (
 			<div className="mapContainer">
 				<div id="map" ref={this.saveMapRef} />
-				{mapIsCreated && this.renderMarker()}
+				{mapIsCreated && this.renderMarkers()}
 			</div>
 		);
 	}
