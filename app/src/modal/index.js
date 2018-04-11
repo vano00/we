@@ -6,19 +6,23 @@ export default class Modal extends Component {
 	static propTypes = {
 		onClose: PropTypes.func.isRequired,
 		show: PropTypes.bool,
-		children: PropTypes.node
+		content: PropTypes.node
 	};
 
 	render() {
+		if(!this.props.show) {
+			return null;
+		}
+
 		const {
 		onClose,
-		children
+		content
 		} = this.props;
 
 		return (
 			<div className="backdrop">
 				<div className="modal">
-				{children}
+				{content}
 					<div className="footer">
 						<button onClick={onClose}>
 							Close

@@ -5,8 +5,8 @@ import MarkerContent from '../marker-content';
 
 export default class Map extends Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.GoogleMap = null;
 		this.map = null;
 		this.infowindow = null;
@@ -15,6 +15,8 @@ export default class Map extends Component {
 		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
 		this.locateMe = this.locateMe.bind(this);
 		this.webcamList = this.webcamList.bind(this);
+		this.renderMarker = this.renderMarker.bind(this);
+		this.stopMarkerAnimation = this.stopMarkerAnimation.bind(this);
 		this.state = {
 			mapIsCreated: false,
 			apiIsLoaded: false,
@@ -51,19 +53,20 @@ export default class Map extends Component {
 					center: position
 				});
 				this.updatePosition();
-				this.createMarker();
+				this.marker = new this.GoogleMap.Marker({
+					position: this.state.center,
+					map:this.map
+				})
 				this.marker.setAnimation(this.GoogleMap.Animation.BOUNCE);
+				this.stopMarkerAnimation(this.marker, 2100);
 			} else {
 				alert("It's not possible to locate you")
 			}
 		})
 	}
 
-	createMarker() {
-		this.marker = new this.GoogleMap.Marker({
-			position: this.state.center,
-			map:this.map
-		})
+	stopMarkerAnimation(marker,time) {
+		setTimeout(function(){ marker.setAnimation(null); }, time);
 	}
 
 	updatePosition() {
@@ -107,18 +110,38 @@ export default class Map extends Component {
 		ref.parentNode.insertBefore(script, ref);
 	}
 
-	marker(position, location, name, url) {
+	onMarkerClick(marker, item) {
+		const {
+			location,
+			name,
+			url
+		} = item;
+
+		const markerContent = (
+			<MarkerContent
+				location={location}
+				name={name}
+				url={url}
+			/>
+		);
+
+		const markerContainer = "<div id=markerContainer></div>";
+
+		this.infowindow.open(this.map, marker);
+		this.infowindow.setContent(markerContainer);
+		ReactDOM.render(markerContent, document.getElementById('markerContainer'));
+	}
+
+	renderMarker(item, index) {
+		const position = {
+			lat: item.latitude,
+			lng: item.longitude
+		};
+
 		const icon = {
 			url: 'https://image.flaticon.com/icons/svg/149/149060.svg',
 			scaledSize: new this.GoogleMap.Size(40, 40),
 		};
-
-		const markerContent = <MarkerContent
-								location={location}
-								name={name}
-								url={url} />
-
-		const markerContainer = "<div id=markerContainer></div>";
 
 		const marker = new this.GoogleMap.Marker({
 			animation: this.GoogleMap.Animation.DROP,
@@ -129,22 +152,11 @@ export default class Map extends Component {
 
 		this.createInfowindow();
 
-		marker.addListener('click', function() {
-			this.infowindow.open(this.map, marker);
-			this.infowindow.setContent(markerContainer);
-			ReactDOM.render(markerContent, document.getElementById('markerContainer'))
-		});
+		marker.addListener('click', this.onMarkerClick.bind(this, marker, item));
 	}
 
 	renderMarkers() {
-
-		return this.state.webcam.map((item, i) => {
-			const position = {lat: item.latitude, lng: item.longitude}
-
-			return (
-				this.marker(position, item.location, item.name, item.url)
-			)
-		});
+		return this.state.webcam.map(this.renderMarker);
 	}
 
 	render() {
