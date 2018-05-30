@@ -9,6 +9,37 @@ export default class Modal extends Component {
 		content: PropTypes.node
 	};
 
+	componentDidMount() {
+		this.manageResize();
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		this.manageResize();
+	}
+
+	manageResize(props = this.props) {
+		const {
+			content = {}
+		} = props;
+
+		const {
+			type
+		} = content || {};
+
+		if (type === "img") {
+			this.resizeModal();
+		}
+	}
+
+	resizeModal() {
+		const modalEl = document.getElementById("modal");
+		const imgEl = document.getElementById("modalImg");
+		imgEl.onload = function(){
+			const width = imgEl.width + "px";
+			modalEl.style.width = width;
+		}
+	}
+
 	render() {
 		if(!this.props.show) {
 			return null;
@@ -21,7 +52,7 @@ export default class Modal extends Component {
 
 		return (
 			<div className="backdrop">
-				<div className="modal">
+				<div id="modal">
 				{content}
 					<div className="footer">
 						<button onClick={onClose}>

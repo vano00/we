@@ -12,25 +12,33 @@ export default class MarkerContent extends Component {
 	static propTypes = {
 		location: PropTypes.string,
 		name: PropTypes.string,
-		url: PropTypes.string
+		url: PropTypes.string,
+		type: PropTypes.string
 	};
 
 	render() {
 		const {
 		location,
 		name,
-		url
+		url,
+		type
 		} = this.props;
 
-		const height = (document.body.clientHeight*0.8)+'px';
-		const width = (document.body.clientWidth*0.9)+'px';
-		const modalContent = <iframe frameBorder="0" title={name} width={width} height={height} src={url}></iframe>
+		let modalContent;
+
+		if (type === "url") {
+			const height = (document.body.clientHeight*0.8)+'px';
+			const width = (document.body.clientWidth*0.9)+'px';
+			modalContent = <iframe frameBorder="0" title={name} width={width} height={height} src={url}></iframe>
+		} else {
+			modalContent = <img id="modalImg" src={url} alt={name}/>
+		}
 
 		return (
 			<div>
 				<strong>{location}</strong> {name}<br />
 				<button className="infowindowbutton" type="button" onClick={() => {
-					ModalManager.show(modalContent);
+					ModalManager.show(modalContent,type);
 				}}>{url}</button>
 			</div>
 		)

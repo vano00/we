@@ -47,7 +47,7 @@ main, .mapContainer {
 	padding: 50px;
 }
 
-.modal {
+#modal {
 	background-color: #fff;
 	border-radius: 5px;
 	margin: 0 auto;

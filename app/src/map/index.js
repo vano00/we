@@ -114,7 +114,8 @@ export default class Map extends Component {
 		const {
 			location,
 			name,
-			url
+			url,
+			type
 		} = item;
 
 		const markerContent = (
@@ -122,11 +123,11 @@ export default class Map extends Component {
 				location={location}
 				name={name}
 				url={url}
+				type={type}
 			/>
 		);
 
 		const markerContainer = "<div id=markerContainer></div>";
-
 		this.infowindow.open(this.map, marker);
 		this.infowindow.setContent(markerContainer);
 		ReactDOM.render(markerContent, document.getElementById('markerContainer'));
@@ -150,9 +151,8 @@ export default class Map extends Component {
 			icon: icon,
 		})
 
-		this.createInfowindow();
-
 		marker.addListener('click', this.onMarkerClick.bind(this, marker, item));
+		this.createInfowindow();
 	}
 
 	renderMarkers() {

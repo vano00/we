@@ -13,9 +13,9 @@ class ModalManager {
 		return this.instance;
 	}
 
-	static show(content) {
+	static show(content, type) {
 		if (this.instance !== null) {
-			this.instance.show(content);
+			this.instance.show(content, type);
 		}
 		return this;
 	}
@@ -30,6 +30,7 @@ class ModalManager {
 	container = null;
 	shown = false;
 	content = null;
+	type = null;
 
 	constructor() {
 		this.hide = this.hide.bind(this);
@@ -39,8 +40,9 @@ class ModalManager {
 		this.container = container;
 	}
 
-	show(content) {
+	show(content, type) {
 		this.content = content;
+		this.type = type;
 		this.shown = true;
 		this.render();
 	}
