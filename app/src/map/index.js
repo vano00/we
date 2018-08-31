@@ -1,136 +1,61 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
 import Utils from '../helpers/utils';
 import MarkerContent from '../marker-content';
 
-export default class Map extends Component {
-
+export default class MyMap extends Component {
 	constructor(props) {
 		super(props);
-		this.GoogleMap = null;
-		this.map = null;
-		this.infowindow = null;
-		this.saveMapRef = this.saveMapRef.bind(this);
-		this.initMap = this.initMap.bind(this);
-		this.onApiIsLoaded = this.onApiIsLoaded.bind(this);
-		this.locateMe = this.locateMe.bind(this);
 		this.webcamList = this.webcamList.bind(this);
-		this.renderMarker = this.renderMarker.bind(this);
-		this.stopMarkerAnimation = this.stopMarkerAnimation.bind(this);
+		this.locateMe = this.locateMe.bind(this);
+		this.renderMyPosition = this.renderMyPosition.bind(this);
 		this.state = {
-			mapIsCreated: false,
-			apiIsLoaded: false,
 			center: {
-				lat: 35.146190,
-				lng: -10.938965
+				lat: 51.505,
+				lng: -0.09
 			},
 			zoom: 3,
 			webcam: [],
+			webcamsLoaded: false,
+			locateMe: false,
+			myPosition: {}
 		}
 	}
 
 	componentDidMount() {
 		this.webcamList();
-		window.onApiIsLoaded = this.onApiIsLoaded;
-		this.loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDOOfGbdcsoynnbalomhaXg09txoQ5JWZo&callback=onApiIsLoaded');
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		if(this.state.apiIsLoaded && this.map === null) {
-			this.initMap();
-		}
-	}
-
-	saveMapRef(ref) {
-		this.mapRef = ref;
 	}
 
 	locateMe(){
 		Utils.getCurrentPosition().then((position) => {
 			if (position) {
-				this.setState({
-					zoom: 10,
-					center: position
-				});
-				this.updatePosition();
-				this.marker = new this.GoogleMap.Marker({
-					position: this.state.center,
-					map:this.map
-				})
-				this.marker.setAnimation(this.GoogleMap.Animation.BOUNCE);
-				this.stopMarkerAnimation(this.marker, 2100);
+				this.setState({myPosition: position})
+				this.setState({locateMe: true})
 			} else {
 				alert("It's not possible to locate you")
 			}
 		})
 	}
 
-	stopMarkerAnimation(marker,time) {
-		setTimeout(function(){ marker.setAnimation(null); }, time);
-	}
-
-	updatePosition() {
-		this.map.setCenter(this.state.center)
-		this.map.setZoom(this.state.zoom)
+	renderMyPosition() {
+		const myPosition = this.state.myPosition;
+		const myIcon = L.icon({
+			iconUrl: 'https://image.flaticon.com/icons/svg/608/608671.svg',
+			iconSize: [40, 40],
+		});
+		return (<Marker position={myPosition} icon={myIcon}>
+					<Popup>
+						You are here my friend!
+					</Popup>
+				</Marker>)
 	}
 
 	webcamList() {
 		return fetch('http://localhost:8000/api/webcams')
 			.then(result=>result.json())
 			.then(webcam=>this.setState({webcam}))
-	}
-
-	onApiIsLoaded() {
-		this.GoogleMap = window.google.maps;
-		this.setState({
-			apiIsLoaded: true
-		});
-	}
-
-	initMap() {
-		this.map = new this.GoogleMap.Map(this.mapRef, {
-			zoom: this.state.zoom,
-			center: this.state.center
-		});
-		this.setState({
-			mapIsCreated: true
-		});
-	}
-
-	createInfowindow() {
-		this.infowindow = new this.GoogleMap.InfoWindow();
-	}
-
-	loadJS(src) {
-		const ref = window.document.getElementsByTagName("script")[0];
-		const script = window.document.createElement("script");
-		script.src = src;
-		script.async = true;
-		script.defer = true;
-		ref.parentNode.insertBefore(script, ref);
-	}
-
-	onMarkerClick(marker, item) {
-		const {
-			location,
-			name,
-			url,
-			type
-		} = item;
-
-		const markerContent = (
-			<MarkerContent
-				location={location}
-				name={name}
-				url={url}
-				type={type}
-			/>
-		);
-
-		const markerContainer = "<div id=markerContainer></div>";
-		this.infowindow.open(this.map, marker);
-		this.infowindow.setContent(markerContainer);
-		ReactDOM.render(markerContent, document.getElementById('markerContainer'));
+			.then(this.setState({webcamsLoaded: true}))
 	}
 
 	renderMarker(item, index) {
@@ -139,20 +64,31 @@ export default class Map extends Component {
 			lng: item.longitude
 		};
 
-		const icon = {
-			url: 'https://image.flaticon.com/icons/svg/149/149060.svg',
-			scaledSize: new this.GoogleMap.Size(40, 40),
-		};
+		const {
+			location,
+			name,
+			url,
+			type,
+			id
+		} = item;
 
-		const marker = new this.GoogleMap.Marker({
-			animation: this.GoogleMap.Animation.DROP,
-			position: position,
-			map: this.map,
-			icon: icon,
-		})
+		const myIcon = L.icon({
+			iconUrl: 'https://image.flaticon.com/icons/svg/149/149060.svg',
+			iconSize: [40, 40],
+		});
 
-		marker.addListener('click', this.onMarkerClick.bind(this, marker, item));
-		this.createInfowindow();
+		return (
+			<Marker position={position} icon={myIcon} key={id}>
+				<Popup>
+					<MarkerContent
+						location={location}
+						name={name}
+						url={url}
+						type={type}
+					/>
+				</Popup>
+			</Marker>
+			)
 	}
 
 	renderMarkers() {
@@ -161,14 +97,20 @@ export default class Map extends Component {
 
 	render() {
 		const {
-			mapIsCreated,
+			center,
+			webcamsLoaded,
+			locateMe,
 		} = this.state;
 
 		return (
-			<div className="mapContainer">
-				<div id="map" ref={this.saveMapRef} />
-				{mapIsCreated && this.renderMarkers()}
-			</div>
+			<Map center={center} zoom={3} ref={this.saveMapRef}>
+				<TileLayer
+				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+				/>
+				{webcamsLoaded && this.renderMarkers()}
+				{locateMe && this.renderMyPosition()}
+			</Map>
 		);
 	}
 }

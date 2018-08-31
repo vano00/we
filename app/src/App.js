@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Map from './map';
+import MyMap from './map';
 import ModalManager from './modal-manager';
 
 class App extends Component {
@@ -9,10 +9,31 @@ class App extends Component {
 		super(props);
 		this.mapRef = null;
 		this.modalContent = null;
+		this.pullClass = null;
+		this.headerClass = null;
 		this.saveMapRef = this.saveMapRef.bind(this);
 		this.saveModalContainerRef = this.saveModalContainerRef.bind(this);
 		this.modalManager = ModalManager.forge();
+		this.toggleMenu = this.toggleMenu.bind(this);
+		this.state = {
+			menuOpen: false,
+		};
 	}
+
+	toggleMenu() {
+
+		if (this.pullClass === 'movePullDown' & this.headerClass === 'openHeader') {
+			this.pullClass = "movePullUp";
+			this.headerClass = "closeHeader";
+		} else {
+			this.pullClass = "movePullDown";
+			this.headerClass = "openHeader";
+		}
+		const currentState = this.state.menuOpen;
+		this.setState({ menuOpen: !currentState });
+
+
+	};
 
 	onClick = () => {
 		this.mapRef.locateMe()
@@ -29,12 +50,14 @@ class App extends Component {
 	render() {
 		return (
 			<div className="content">
-				<header>
+				<div id="pullContainer">
+					<span className={this.pullClass} onClick={this.toggleMenu} id="pull"></span>
+				</div>
+				<header className={this.headerClass}>
 					<button onClick={this.onClick}>Locate me!</button>
-					<button onClick={(e) => this.modalManager.show("sdsda")}>Show modal!</button>
 				</header>
 				<main>
-					<Map ref={this.saveMapRef} />
+					<MyMap ref={this.saveMapRef} />
 				</main>
 				<div ref={this.saveModalContainerRef}></div>
 			</div>

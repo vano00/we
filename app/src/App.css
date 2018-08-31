@@ -3,10 +3,98 @@ html, body {
 	margin: 0;
 }
 
+@keyframes moveHeaderDown {
+	from {top:-56px;}
+	to {top:0px;}
+}
+
+@keyframes moveHeaderUp {
+	from {top:0px;}
+	to {top:-56px;}
+}
+
+@keyframes movePullButtonDown {
+	from {top:-10px;}
+	to {top:46px;}
+}
+
+@keyframes movePullButtonUp {
+	from {top:46px;}
+	to {top:-10px;}
+}
+
+@keyframes switchArrowUp {
+	from {content: "\FFEC";}
+	to {content: "\FFEA";}
+}
+
+@keyframes switchArrowDown {
+	from {content: "\FFEA";}
+	to {content: "\FFEC";}
+}
+
 header {
 	background-color: #00796B;
 	padding: 10px;
+	position: fixed;
+	width: 100%;
+	z-index: 10000;
+	top:-56px;
+}
 
+.openHeader {
+	animation-name: moveHeaderDown;
+	animation-duration: 1s;
+	top: 0px;
+}
+
+.closeHeader {
+	animation-name: moveHeaderUp;
+	animation-duration: 1s;
+	top: -56px;
+}
+
+#pullContainer {
+	width: 100%;
+	background-color: red;
+	text-align: center;
+	position: fixed;
+	z-index: 1000;
+	height: 0px;
+}
+
+#pull {
+	background-color: #00796B;
+	border-radius: 5px;
+	color: #fff;
+	padding: 0px 15px;
+	top: -10px;
+	position: relative;
+	cursor: pointer;
+}
+
+#pull:before {
+	content: "\FFEC";
+}
+
+.movePullDown {
+	animation: movePullButtonDown 1s;
+	top: 46px !important;
+}
+
+.movePullDown:before {
+	animation: switchArrowUp 3s;
+	content: "\FFEC" !important;
+}
+
+.movePullUp {
+	animation: movePullButtonUp 1s;
+	top: -10px !important;
+}
+
+.movePullUp:before {
+	animation: switchArrowDown 3s;
+	content: "\FFEA" !important;
 }
 
 .content {
@@ -15,14 +103,14 @@ header {
 	flex-direction: column;
 }
 
-main, .mapContainer {
+main, .leaflet-container {
 	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-basis: auto;
 }
 
-#app, #map {
+#app, #mapid {
 	width: 100%;
 	height: 100%;
 }
@@ -45,6 +133,7 @@ main, .mapContainer {
 	right: 0;
 	background-color: rgba(0,0,0,0.8);
 	padding: 50px;
+	z-index: 10000;
 }
 
 #modal {
@@ -73,9 +162,10 @@ button {
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
 }
 
-.infowindowbutton {
+.leaflet-popup-content button {
 	background-color: transparent;
 	color: #000;
 	text-transform: none;
 	padding: 0;
+	box-shadow: none;
 }
