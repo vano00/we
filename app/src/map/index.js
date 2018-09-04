@@ -10,6 +10,7 @@ export default class MyMap extends Component {
 		this.webcamList = this.webcamList.bind(this);
 		this.locateMe = this.locateMe.bind(this);
 		this.renderMyPosition = this.renderMyPosition.bind(this);
+		// this.updateMapCenter = this.updateMapCenter.bind(this);
 		this.state = {
 			center: {
 				lat: 51.505,
@@ -30,10 +31,10 @@ export default class MyMap extends Component {
 	locateMe(){
 		Utils.getCurrentPosition().then((position) => {
 			if (position) {
-				this.setState({myPosition: position})
-				this.setState({locateMe: true})
+				this.setState({myPosition: position});
+				this.setState({locateMe: true});
 			} else {
-				alert("It's not possible to locate you")
+				alert("It's not possible to locate you");
 			}
 		})
 	}
@@ -44,11 +45,22 @@ export default class MyMap extends Component {
 			iconUrl: 'https://image.flaticon.com/icons/svg/608/608671.svg',
 			iconSize: [40, 40],
 		});
+
+		this.updateMapCenter(myPosition, 10);
+
 		return (<Marker position={myPosition} icon={myIcon}>
 					<Popup>
 						You are here my friend!
 					</Popup>
 				</Marker>)
+	}
+
+	updateMapCenter(position, zoom) {
+		const newPosition = position;
+		const newzoom = zoom;
+
+		console.log(newPosition, newzoom);
+		this.setState({center: newPosition}, {newzoom: zoom});
 	}
 
 	webcamList() {
@@ -100,10 +112,11 @@ export default class MyMap extends Component {
 			center,
 			webcamsLoaded,
 			locateMe,
+			zoom
 		} = this.state;
 
 		return (
-			<Map center={center} zoom={3} ref={this.saveMapRef}>
+			<Map center={center} zoom={zoom} ref={this.saveMapRef}>
 				<TileLayer
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"

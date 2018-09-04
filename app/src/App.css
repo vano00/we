@@ -84,7 +84,8 @@ header {
 
 .movePullDown:before {
 	animation: switchArrowUp 3s;
-	content: "\FFEC" !important;
+	content: "\FFEA" !important;
+
 }
 
 .movePullUp {
@@ -94,7 +95,7 @@ header {
 
 .movePullUp:before {
 	animation: switchArrowDown 3s;
-	content: "\FFEA" !important;
+	content: "\FFEC" !important;
 }
 
 .content {
