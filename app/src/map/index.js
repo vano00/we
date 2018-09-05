@@ -5,23 +5,25 @@ import Utils from '../helpers/utils';
 import MarkerContent from '../marker-content';
 
 export default class MyMap extends Component {
+
+	state = {
+		center: {
+			lat: 51.505,
+			lng: -0.09
+		},
+		zoom: 3,
+		webcam: [],
+		webcamsLoaded: false,
+		locateMe: false,
+		myPosition: {}
+	}
+
 	constructor(props) {
 		super(props);
 		this.webcamList = this.webcamList.bind(this);
 		this.locateMe = this.locateMe.bind(this);
 		this.renderMyPosition = this.renderMyPosition.bind(this);
-		// this.updateMapCenter = this.updateMapCenter.bind(this);
-		this.state = {
-			center: {
-				lat: 51.505,
-				lng: -0.09
-			},
-			zoom: 3,
-			webcam: [],
-			webcamsLoaded: false,
-			locateMe: false,
-			myPosition: {}
-		}
+		this.updateMapCenter = this.updateMapCenter.bind(this);
 	}
 
 	componentDidMount() {
@@ -31,8 +33,8 @@ export default class MyMap extends Component {
 	locateMe(){
 		Utils.getCurrentPosition().then((position) => {
 			if (position) {
-				this.setState({myPosition: position});
-				this.setState({locateMe: true});
+				this.setState({myPosition: position, locateMe: true});
+				this.updateMapCenter(position, 10);
 			} else {
 				alert("It's not possible to locate you");
 			}
@@ -46,8 +48,6 @@ export default class MyMap extends Component {
 			iconSize: [40, 40],
 		});
 
-		this.updateMapCenter(myPosition, 10);
-
 		return (<Marker position={myPosition} icon={myIcon}>
 					<Popup>
 						You are here my friend!
@@ -56,11 +56,7 @@ export default class MyMap extends Component {
 	}
 
 	updateMapCenter(position, zoom) {
-		const newPosition = position;
-		const newzoom = zoom;
-
-		console.log(newPosition, newzoom);
-		this.setState({center: newPosition}, {newzoom: zoom});
+		this.setState({center: position, zoom: zoom});
 	}
 
 	webcamList() {

@@ -4,9 +4,12 @@ import ModalManager from '../modal-manager';
 
 export default class MarkerContent extends Component {
 
+	state = {
+		modalIsOpen: false
+	}
+
 	constructor(props) {
 		super(props);
-		this.state = { modalIsOpen: false };
 	}
 
 	static propTypes = {
