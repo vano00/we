@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import MyMap from './map';
+import MyMap from './my_map';
 import ModalManager from './modal-manager';
 
 class App extends Component {
