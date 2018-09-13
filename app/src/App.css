@@ -1,6 +1,8 @@
 html, body {
 	height: 100%;
 	margin: 0;
+	font-family: Roboto;
+	font-weight: 400;
 }
 
 @keyframes moveHeaderDown {
@@ -147,7 +149,7 @@ main, .leaflet-container {
 
 /**** Buttons ****/
 
-button {
+button, header li {
 	padding: 0 16px;
 	font-size: 14px;
 	background-color: #80CBC4;
@@ -161,6 +163,22 @@ button {
 	text-transform: uppercase;
 	text-align: center;
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
+}
+
+header li {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+header li a {
+	color: #fff;
+	text-decoration: none;
+}
+
+header ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 .leaflet-popup-content button {

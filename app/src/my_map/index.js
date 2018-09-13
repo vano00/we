@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import Utils from '../helpers/utils';
 import MarkerContent from '../marker-content';
 
-export default class MyMap extends Component {
+export default class MyMap extends Map {
 
 	state = {
 		center: {

@@ -8,10 +8,6 @@ export default class MarkerContent extends Component {
 		modalIsOpen: false
 	}
 
-	constructor(props) {
-		super(props);
-	}
-
 	static propTypes = {
 		location: PropTypes.string,
 		name: PropTypes.string,
