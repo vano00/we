@@ -13,4 +13,27 @@ export default class Utils {
 			});
 		})
 	};
+
+	static handleErrors(response) {
+		if (!response.ok) {
+			throw Error(response.statusText);
+		}
+		return response;
+	}
+
+	static getTokenFromLocalStorage() {
+		return localStorage.getItem('token');
+	}
+
+	static isUserLogged() {
+		if (localStorage.getItem('token')) {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	static handleLogOut() {
+		localStorage.clear();
+	}
 }

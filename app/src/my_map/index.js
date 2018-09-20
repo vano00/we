@@ -61,9 +61,11 @@ export default class MyMap extends Map {
 
 	webcamList() {
 		return fetch('http://localhost:8000/api/webcams')
+			.then(Utils.handleErrors)
 			.then(result=>result.json())
 			.then(webcam=>this.setState({webcam}))
 			.then(this.setState({webcamsLoaded: true}))
+			.catch(error => console.log(error) );
 	}
 
 	renderMarker(item, index) {
@@ -112,7 +114,7 @@ export default class MyMap extends Map {
 		} = this.state;
 
 		return (
-			<Map center={center} zoom={zoom} ref={this.saveMapRef}>
+			<Map center={center} zoom={zoom}>
 				<TileLayer
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"

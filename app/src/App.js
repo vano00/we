@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from "react-router-dom";
+
 import './App.css';
-import MyMap from './my_map';
 import Admin from './admin';
-import Login from './admin/login';
+import ModalManager from './modal-manager';
+import MyMap from './my_map';
 import NavAdmin from './nav_admin';
 import Nav from './nav';
-import ModalManager from './modal-manager';
+import Utils from './helpers/utils';
 
 class App extends Component {
 
@@ -22,9 +23,11 @@ class App extends Component {
 		this.saveModalContainerRef = this.saveModalContainerRef.bind(this);
 		this.modalManager = ModalManager.forge();
 		this.toggleMenu = this.toggleMenu.bind(this);
-		this.state = {
-			menuOpen: false,
-		};
+	}
+
+	state = {
+		menuOpen: false,
+		userIsLogged: Utils.isUserLogged()
 	}
 
 	componentDidMount() {
@@ -55,7 +58,10 @@ class App extends Component {
 						render={(props) => <Nav {...props} map={this.mapRef} />}
 						exact path="/"
 					/>
-				<Route path="/admin" component={NavAdmin} />
+					<Route
+						render={(props) => <NavAdmin {...props} userIsLogged={this.state.userIsLogged}/>}
+						exact path="/admin"
+					/>
 				</div>
 			</Router>
 		)
@@ -79,8 +85,10 @@ class App extends Component {
 								render={(props) => <MyMap {...props} ref={this.saveMapRef} />}
 								exact path="/"
 							/>
-						<Route exact path="/admin" component={Admin} />
-							<Route path="/admin/login" component={Login} />
+							<Route
+								render={(props) => <Admin {...props} userIsLogged={this.state.userIsLogged}/>}
+								exact path="/admin"
+							/>
 						</main>
 					<div ref={this.saveModalContainerRef}></div>
 				</div>
