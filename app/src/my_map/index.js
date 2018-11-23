@@ -15,7 +15,7 @@ export default class MyMap extends Map {
 		webcam: [],
 		webcamsLoaded: false,
 		locateMe: false,
-		myPosition: {}
+		myPosition: {},
 	}
 
 	constructor(props) {
@@ -31,6 +31,7 @@ export default class MyMap extends Map {
 	}
 
 	locateMe(){
+		this.setState({loader: true});
 		Utils.getCurrentPosition().then((position) => {
 			if (position) {
 				this.setState({myPosition: position, locateMe: true});
@@ -110,7 +111,7 @@ export default class MyMap extends Map {
 			center,
 			webcamsLoaded,
 			locateMe,
-			zoom
+			zoom,
 		} = this.state;
 
 		return (

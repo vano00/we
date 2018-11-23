@@ -60,22 +60,43 @@ export default class Login extends Component {
 		return (
 			<div>
 				<form onSubmit={this.handleSubmit}>
-					<label>
-						Email:
+					<div className="mdl-textfield mdl-js-textfield">
 						<input
-						name="email"
-						type="text"
-						onChange={this.handleInputChange} />
-					</label>
+							className="mdl-textfield__input"
+							name="email"
+							type="text"
+							id="email"
+							onChange={this.handleInputChange}
+						/>
+						<label
+							className="mdl-textfield__label"
+							htmlFor="email"
+						>
+							Email:
+						</label>
+					</div>
 					<br />
-					<label>
-						Password:
+					<div className="mdl-textfield mdl-js-textfield">
 						<input
-						name="password"
-						type="password"
-						onChange={this.handleInputChange}/>
-					</label>
-					<input type="submit" value="Submit" />
+							className="mdl-textfield__input"
+							name="password"
+							type="password"
+							id="password"
+							onChange={this.handleInputChange}
+						 />
+						<label
+							className="mdl-textfield__label"
+							htmlFor="password"
+						>
+							Password:
+						</label>
+					</div>
+					<br />
+					<input
+						className="mdl-button mdl-js-button mdl-button--raised"
+						type="submit"
+						value="Submit"
+					 />
 				</form>
 			</div>
 		);

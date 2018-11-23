@@ -51,14 +51,9 @@ export default class Modal extends Component {
 		} = this.props;
 
 		return (
-			<div className="backdrop">
+			<div className="backdrop" onClick={onClose}>
 				<div id="modal">
 				{content}
-					<div className="footer">
-						<button onClick={onClose}>
-							Close
-						</button>
-					</div>
 				</div>
 			</div>
 		);

@@ -1,103 +1,7 @@
 html, body {
 	height: 100%;
 	margin: 0;
-	font-family: Roboto;
-	font-weight: 400;
-}
-
-@keyframes moveHeaderDown {
-	from {top:-56px;}
-	to {top:0px;}
-}
-
-@keyframes moveHeaderUp {
-	from {top:0px;}
-	to {top:-56px;}
-}
-
-@keyframes movePullButtonDown {
-	from {top:-10px;}
-	to {top:46px;}
-}
-
-@keyframes movePullButtonUp {
-	from {top:46px;}
-	to {top:-10px;}
-}
-
-@keyframes switchArrowUp {
-	from {content: "\FFEC";}
-	to {content: "\FFEA";}
-}
-
-@keyframes switchArrowDown {
-	from {content: "\FFEA";}
-	to {content: "\FFEC";}
-}
-
-header {
-	background-color: #00796B;
-	padding: 10px;
-	position: fixed;
-	width: 100%;
-	z-index: 10000;
-	top:-56px;
-}
-
-.openHeader {
-	animation-name: moveHeaderDown;
-	animation-duration: 1s;
-	top: 0px;
-}
-
-.closeHeader {
-	animation-name: moveHeaderUp;
-	animation-duration: 1s;
-	top: -56px;
-}
-
-#pullContainer {
-	width: 100%;
-	background-color: red;
-	text-align: center;
-	position: fixed;
-	z-index: 1000;
-	height: 0px;
-}
-
-#pull {
-	background-color: #00796B;
-	border-radius: 5px;
-	color: #fff;
-	padding: 0px 15px;
-	top: -10px;
-	position: relative;
-	cursor: pointer;
-}
-
-#pull:before {
-	content: "\FFEC";
-}
-
-.movePullDown {
-	animation: movePullButtonDown 1s;
-	top: 46px !important;
-}
-
-.movePullDown:before {
-	animation: switchArrowUp 3s;
-	content: "\FFEA" !important;
-
-}
-
-.movePullUp {
-	animation: movePullButtonUp 1s;
-	top: -10px !important;
-}
-
-.movePullUp:before {
-	animation: switchArrowDown 3s;
-	content: "\FFEC" !important;
+	font-family: 'Roboto', 'Helvetica', sans-serif;
 }
 
 .content {
@@ -113,7 +17,7 @@ main, .leaflet-container {
 	flex-basis: auto;
 }
 
-#app, #mapid {
+#app {
 	width: 100%;
 	height: 100%;
 }
@@ -124,6 +28,18 @@ main, .leaflet-container {
 	color: white;
 	font-weight: bold;
 	width: 100%;
+}
+
+/**** Button ****/
+
+.leaflet-popup-content button {
+	background-color: transparent;
+	color: #000;
+	text-transform: none;
+	padding: 0;
+	box-shadow: none;
+	border: none;
+	cursor: pointer;
 }
 
 /**** Modal ****/
@@ -147,44 +63,42 @@ main, .leaflet-container {
 	text-align: center;
 }
 
-/**** Buttons ****/
-
-button, header li {
-	padding: 0 16px;
-	font-size: 14px;
-	background-color: #80CBC4;
-	color: #fff;
-	border: none;
-	cursor: pointer;
-	letter-spacing: 0.5;
-	border-radius: 2px;
-	height: 36px;
-	line-height: 36px;
-	text-transform: uppercase;
-	text-align: center;
-	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14);
+#header {
+	z-index: 10000;
 }
 
-header li {
-	display: inline-block;
-	margin-right: 5px;
+.mdl-spinner {
+	z-index: 10100;
 }
 
-header li a {
-	color: #fff;
-	text-decoration: none;
+.webcams-navigation {
+	flex-grow: 1;
+}
+.webcams-layout .webcams-navigation .mdl-navigation__link {
+	display: flex !important;
+	flex-direction: row;
+	align-items: center;
+	color: rgba(255, 255, 255, 0.56);
+	font-weight: 500;
+}
+.webcams-layout .webcams-navigation .mdl-navigation__link:hover {
+	background-color: #00BCD4;
+	color: #37474F;
+}
+.webcams-navigation .mdl-navigation__link .material-icons {
+	font-size: 24px;
+	color: rgba(255, 255, 255, 0.56);
+	margin-right: 32px;
 }
 
-header ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+.webcams-content {
+	max-width: 1080px;
 }
 
-.leaflet-popup-content button {
-	background-color: transparent;
-	color: #000;
-	text-transform: none;
-	padding: 0;
-	box-shadow: none;
+#locate-me {
+	margin-right: 15px;
+}
+
+.mdl-layout__header-row {
+	padding: 0 40px;
 }

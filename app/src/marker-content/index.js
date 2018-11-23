@@ -36,7 +36,7 @@ export default class MarkerContent extends Component {
 		return (
 			<div>
 				<strong>{location}</strong> {name}<br />
-				<button className="infowindowbutton" type="button" onClick={() => {
+				<button type="button" onClick={() => {
 					ModalManager.show(modalContent,type);
 				}}>{url}</button>
 			</div>
