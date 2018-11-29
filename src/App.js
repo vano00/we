@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+
+import Layout from './containers/Layout/Layout';
+import * as actions from './store/actions/index';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+	componentDidMount() {
+		this.props.onFetchWebcams();
+	}
+
+	render() {
+		return (
+			<div className="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+				<Layout />
+			</div>
+		);
+	}
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+	return {
+		onFetchWebcams: () => dispatch(actions.fetchWebcams())
+	}
+}
+
+export default connect(null, mapDispatchToProps)(App);
