@@ -8,10 +8,12 @@ import * as serviceWorker from './serviceWorker';
 import './index.css';
 import App from './App';
 import webcamsReducer from './store/reducers/webcams';
+import mapReducer from './store/reducers/map';
 import { watchWebcams } from './store/sagas';
 
 const rootReducer = combineReducers({
-	webcams: webcamsReducer
+	webcams: webcamsReducer,
+	map: mapReducer
 })
 
 const sagaMiddleware = createSagaMiddleware();

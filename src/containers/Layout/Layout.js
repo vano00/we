@@ -10,7 +10,6 @@ class Layout extends Component {
 				<Toolbar />
 				<SideDrawer />
 				<main>
-					My App
 					{this.props.children}
 				</main>
 			</React.Fragment>
