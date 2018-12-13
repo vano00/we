@@ -4,17 +4,19 @@ import axios from '../../axios-webcams';
 import * as actions from '../actions/index';
 
 export function* fetchWebcamsSaga(action) {
+	console.log('saga params', action.params);
 	try {
-		const response = yield axios.get('list/country=ch?lang=en&show=webcams')
-		const fetchedWebcams = response.data.result.webcams;
+		const response = yield axios.get(action.params)
+		console.log(response.data.result.webcams);
+		// const fetchedWebcams = response.data.result.webcams;
 		// for (let key in response.data.result.webcams) {
 		// 	fetchedWebcams.push({
 		// 		...response.result.webcams[key],
 		// 		id: key
 		// 	})
 		// }
-		// console.log(fetchedWebcams);
-		yield put(actions.fetchWebcamsSuccess(fetchedWebcams));
+		//console.log(fetchedWebcams);
+		//yield put(actions.fetchWebcamsSuccess(fetchedWebcams));
 	} catch (error) {
 		console.log('Error saga:',error);
 	}

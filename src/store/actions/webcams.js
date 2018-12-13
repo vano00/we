@@ -20,8 +20,9 @@ export const fetchWebcamsFailed = (error) => {
 	}
 }
 
-export const fetchWebcams = () => {
+export const fetchWebcams = (params) => {
 	return {
 		type: actionTypes.FETCH_WEBCAMS,
+		params: params
 	}
 };

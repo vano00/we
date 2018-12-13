@@ -6,15 +6,14 @@ const initialState = {
 	sw_lat: null,
 	sw_lng: null,
 	ne_lat: null,
-	zoom: 3,
+	zoom: 6,
 	center: {
-		lat: 51.505,
-		lng: -0.09
+		lat: 43.33017262373211,
+		lng: 21.432266235351566
 	},
 };
 
 const updateMapProps = (state, action) => {
-	console.log(action.mapBounds._northEast);
 	return updateObject(
 		state, {
 			center: action.center,
@@ -26,7 +25,6 @@ const updateMapProps = (state, action) => {
 		}
 	);
 }
-
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
