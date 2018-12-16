@@ -6,10 +6,10 @@ const initialState = {
 	sw_lat: null,
 	sw_lng: null,
 	ne_lat: null,
-	zoom: 6,
+	zoom: 5,
 	center: {
-		lat: 43.33017262373211,
-		lng: 21.432266235351566
+		lat: 46.70973594407157,
+		lng: 17.402343750000004
 	},
 };
 

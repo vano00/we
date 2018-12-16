@@ -14,6 +14,9 @@ class Map extends Component {
 	componentDidMount() {
 		this.map = this.refs.map.leafletElement;
 		this.updateMapProps();
+	}
+
+	componentDidUpdate() {
 		this.getWebcams()
 	}
 
@@ -32,7 +35,6 @@ class Map extends Component {
 
 	onViewportChanged = () => {
 		this.updateMapProps();
-		this.getWebcams()
 	}
 
 	render () {
