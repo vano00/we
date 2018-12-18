@@ -1,6 +1,8 @@
 export {
+	fetchWebcamsStart,
 	fetchWebcams,
-	fetchWebcamsSuccess
+	fetchWebcamsSuccess,
+	fetchWebcamsFailed
 } from './webcams';
 
 export {

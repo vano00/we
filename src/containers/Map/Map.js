@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Map as LeafletMap, TileLayer} from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
 
 import './Map.css';
 import * as actions from '../../store/actions/index';
@@ -16,13 +17,41 @@ class Map extends Component {
 		this.updateMapProps();
 	}
 
-	componentDidUpdate() {
-		this.getWebcams()
+	componentDidUpdate(prevProps) {
+		if (
+			prevProps.ne_lng !== this.props.ne_lng &&
+			prevProps.ne_lat !== this.props.ne_lat &&
+			prevProps.sw_lat !== this.props.sw_lat &&
+			prevProps.sw_lng !== this.props.sw_lng) {
+			this.getWebcams();
+		}
 	}
 
 	getWebcams() {
 		const params = '/map/' + this.props.ne_lat + ',' + this.props.ne_lng + ',' + this.props.sw_lat + ',' + this.props.sw_lng + ',' + this.props.zoom;
 		this.props.onFetchWebcams(params);
+	}
+
+	renderWebcams = () => {
+		this.props.webcams.map( webcam => {
+			const position = {
+			lat: webcam.location.latitude,
+			lng: webcam.location.longitude
+			};
+
+			const myIcon = L.icon({
+				iconUrl: 'https://image.flaticon.com/icons/svg/149/149060.svg',
+				iconSize: [40, 40],
+			});
+
+			return (
+				<Marker position={position} icon={myIcon} key={webcam.id}>
+					<Popup>
+						Hello
+					</Popup>
+				</Marker>
+			)
+		})
 	}
 
 	updateMapProps = () => {
@@ -50,6 +79,7 @@ class Map extends Component {
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 					/>
+					{this.renderWebcams()}
 				</LeafletMap>
 			</div>
 		)
@@ -64,6 +94,7 @@ const mapStateToProps = state => {
 		sw_lat: state.map.sw_lat,
 		sw_lng: state.map.sw_lng,
 		ne_lat: state.map.ne_lat,
+		webcams: state.webcams.webcams
 	}
 }
 
