@@ -32,8 +32,7 @@ class Map extends Component {
 		this.props.onFetchWebcams(params);
 	}
 
-	renderWebcams = () => {
-		this.props.webcams.map( webcam => {
+	renderWebcam(webcam) {
 			const position = {
 			lat: webcam.location.latitude,
 			lng: webcam.location.longitude
@@ -44,14 +43,20 @@ class Map extends Component {
 				iconSize: [40, 40],
 			});
 
+			console.log('render webcam', webcam);
+
 			return (
 				<Marker position={position} icon={myIcon} key={webcam.id}>
 					<Popup>
-						Hello
+						{webcam.title}
 					</Popup>
 				</Marker>
 			)
-		})
+	}
+
+	renderWebcams() {
+		console.log('render webcams', this.props.webcams);
+		return this.props.webcams.map(this.renderWebcam);
 	}
 
 	updateMapProps = () => {
@@ -67,6 +72,7 @@ class Map extends Component {
 	}
 
 	render () {
+		console.log('webcams 1:',this.props.webcams);
 		return (
 			<div id="mapid">
 				<LeafletMap
