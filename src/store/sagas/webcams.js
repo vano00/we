@@ -4,29 +4,38 @@ import axios from '../../axios-webcams';
 import * as actions from '../actions/index';
 
 export function* fetchWebcamsSaga(action) {
-	yield put(actions.fetchWebcamsStart());
-	const webcams = [];
+	let webcamsIds = [];
+	let webcams = [];
+
+	webcamsIds = yield getWebcamsID(action.params);
+	webcams = yield getWebcams(webcamsIds);
+	yield put(actions.fetchWebcamsSuccess(webcams));
+}
+
+function getWebcamsID(params) {
 	try {
-		yield axios.get(action.params)
+		return axios.get(params)
 		.then(response => {
-			console.log('Axios response',response.data.result.webcams);
-			response.data.result.webcams.map(webcam => {
-				try {
-					axios.get('list/webcam=' + webcam.id +'?lang=en&show=webcams%3Aimage%2Clocation')
-					.then(function (webcamDetails){
-						webcams.push(webcamDetails.data.result.webcams[0]);
-						return webcams
-					})
-				}  catch (error) {
-					console.log('Error fetch webcam details saga:',error);
-				}
-				return webcams
+			return response.data.result.webcams.map(webcam => {
+				return webcam.id;
 			})
 		})
-		console.log('Webcam array',webcams);
-		yield put(actions.fetchWebcamsSuccess(webcams));
 	} catch (error) {
-		console.log('Error fetch webcams saga:',error);
-		yield put(actions.fetchWebcamsFailed());
+		console.log('Error webcams saga get IDs:',error);
+		put(actions.fetchWebcamsFailed());
 	}
-};
+}
+
+function getWebcams(webcamsIds) {
+	let axiosReq = webcamsIds.map(id => {
+		return axios.get('list/webcam=' + id +'?lang=en&show=webcams%3Aimage%2Clocation');
+	})
+
+	return Promise.all(axiosReq).then(response => {
+		return response.map(webcam => {
+			return webcam.data.result.webcams[0];
+		})
+	}).catch(error => {
+		console.log('Error webcams saga get webcams', error)
+	});
+}

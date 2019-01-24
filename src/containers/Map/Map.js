@@ -19,9 +19,9 @@ class Map extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (
-			prevProps.ne_lng !== this.props.ne_lng &&
-			prevProps.ne_lat !== this.props.ne_lat &&
-			prevProps.sw_lat !== this.props.sw_lat &&
+			prevProps.ne_lng !== this.props.ne_lng ||
+			prevProps.ne_lat !== this.props.ne_lat ||
+			prevProps.sw_lat !== this.props.sw_lat ||
 			prevProps.sw_lng !== this.props.sw_lng) {
 			this.getWebcams();
 		}
@@ -43,7 +43,7 @@ class Map extends Component {
 				iconSize: [40, 40],
 			});
 
-			console.log('render webcam', webcam);
+			console.log('render webcam in map', webcam);
 
 			return (
 				<Marker position={position} icon={myIcon} key={webcam.id}>
@@ -55,8 +55,8 @@ class Map extends Component {
 	}
 
 	renderWebcams() {
-		console.log('render webcams', this.props.webcams);
-		return this.props.webcams.map(this.renderWebcam);
+		console.log('render webcamS in map', this.props.webcams);
+		return this.props.webcams.map(webcam => this.renderWebcam(webcam));
 	}
 
 	updateMapProps = () => {
@@ -72,7 +72,8 @@ class Map extends Component {
 	}
 
 	render () {
-		console.log('webcams 1:',this.props.webcams);
+		console.log('Webcams props length in render map:',this.props.webcams.length);
+		console.log('Webcams props in render map:',this.props.webcams);
 		return (
 			<div id="mapid">
 				<LeafletMap
@@ -80,12 +81,14 @@ class Map extends Component {
 					center={this.props.center}
 					zoom={this.props.zoom}
 					onViewportChanged={this.onViewportChanged}
-				>
+				><div className="spinner" style={{height:'100%', width: '100%'}}>
+					<div className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+				</div>
 					<TileLayer
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 					/>
-					{this.renderWebcams()}
+				{this.props.webcams.length > 0 ? this.renderWebcams() : null}
 				</LeafletMap>
 			</div>
 		)
@@ -100,7 +103,7 @@ const mapStateToProps = state => {
 		sw_lat: state.map.sw_lat,
 		sw_lng: state.map.sw_lng,
 		ne_lat: state.map.ne_lat,
-		webcams: state.webcams.webcams
+		webcams: state.webcams.webcams.slice(0)
 	}
 }
 
