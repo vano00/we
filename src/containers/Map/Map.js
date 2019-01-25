@@ -43,7 +43,7 @@ class Map extends Component {
 				iconSize: [40, 40],
 			});
 
-			console.log('render webcam in map', webcam);
+			// console.log('render webcam in map', webcam);
 
 			return (
 				<Marker position={position} icon={myIcon} key={webcam.id}>
@@ -72,7 +72,7 @@ class Map extends Component {
 	}
 
 	render () {
-		console.log('Webcams props length in render map:',this.props.webcams.length);
+		console.log('webcams in render map', this.props.webcams.length);
 		console.log('Webcams props in render map:',this.props.webcams);
 		return (
 			<div id="mapid">

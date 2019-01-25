@@ -9,7 +9,7 @@ export function* fetchWebcamsSaga(action) {
 
 	webcamsIds = yield getWebcamsID(action.params);
 	webcams = yield getWebcams(webcamsIds);
-	yield put(actions.fetchWebcamsSuccess(webcams));
+	yield put(actions.fetchWebcamsSuccess(webcams.filter(webcam => webcam !== undefined)));
 }
 
 function getWebcamsID(params) {

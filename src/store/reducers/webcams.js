@@ -7,7 +7,10 @@ const initialState = {
 };
 
 const fetchWebcamsStart = (state, action) => updateObject(state, { loading: true });
-const fetchWebcamsSuccess = (state, action) => updateObject(state, { webcams: action.webcams.slice(0), loading: false });
+const fetchWebcamsSuccess = (state, action) => {
+	console.log('webcams in reducer', action.webcams.length);
+	return updateObject(state, { webcams: action.webcams.slice(0), loading: false });
+}
 const fetchWebcamsFailed = (state, action) => updateObject(state, { loading: false });
 
 
