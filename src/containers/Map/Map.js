@@ -5,6 +5,8 @@ import L from 'leaflet';
 
 import './Map.css';
 import * as actions from '../../store/actions/index';
+import Backdrop from '../../components/UI/Backdrop/Backdrop';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Map extends Component {
 	constructor(props) {
@@ -72,8 +74,6 @@ class Map extends Component {
 	}
 
 	render () {
-		console.log('webcams in render map', this.props.webcams.length);
-		console.log('Webcams props in render map:',this.props.webcams);
 		return (
 			<div id="mapid">
 				<LeafletMap
@@ -81,15 +81,14 @@ class Map extends Component {
 					center={this.props.center}
 					zoom={this.props.zoom}
 					onViewportChanged={this.onViewportChanged}
-				><div className="spinner" style={{height:'100%', width: '100%'}}>
-					<div className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
-				</div>
+				>
 					<TileLayer
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 					/>
-				{this.props.webcams.length > 0 ? this.renderWebcams() : null}
+					{this.props.webcams.length > 0 ? this.renderWebcams() : null}
 				</LeafletMap>
+				<Backdrop show={this.props.loading}/>
 			</div>
 		)
 	}
@@ -103,7 +102,8 @@ const mapStateToProps = state => {
 		sw_lat: state.map.sw_lat,
 		sw_lng: state.map.sw_lng,
 		ne_lat: state.map.ne_lat,
-		webcams: state.webcams.webcams.slice(0)
+		webcams: state.webcams.webcams.slice(0),
+		loading: state.webcams.loading
 	}
 }
 
@@ -113,5 +113,9 @@ const mapDispatchToProps = dispatch => {
 		onFetchWebcams: (params) => dispatch(actions.fetchWebcams(params))
 	}
 }
+
+// <div className="spinner" style={{height:'100%', width: '100%', position: 'absolute', top: 'calc(100% - 64px)', backgroundColor: 'black', zIndex:'1', opacity: '0.5', display: 'flex'}}>
+// 	<div className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active" style={{margin: 'auto'}}></div>
+// </div>
 
 export default connect(mapStateToProps, mapDispatchToProps)(Map);

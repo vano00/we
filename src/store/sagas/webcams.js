@@ -6,7 +6,7 @@ import * as actions from '../actions/index';
 export function* fetchWebcamsSaga(action) {
 	let webcamsIds = [];
 	let webcams = [];
-
+	yield put(actions.fetchWebcamsStart());
 	webcamsIds = yield getWebcamsID(action.params);
 	webcams = yield getWebcams(webcamsIds);
 	yield put(actions.fetchWebcamsSuccess(webcams.filter(webcam => webcam !== undefined)));
